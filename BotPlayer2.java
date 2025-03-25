@@ -14,13 +14,14 @@ public class BotPlayer2 implements Player {
      * @param playerChips    An array representing the chips each player has.
      * @param bets           An array representing the current bets of each player.
      * @param index          The index of the player making the move.
+     * @param dealer_index   The index of the dealer
      * @return The amount to bet:
      *         - Return `current_bet` to call.
      *         - Return at least twice `current_bet` or all remaining `chips` to raise.
      *         - Return any other value to fold.
      */
-    public Double makeMove(List<Card> hand, List<Card> communityCards, Double pot, Double current_bet, Double chips, Double bet, Double[] playerChips, Double[] bets, int index) {
-    Random rng = new Random();
+    public Double makeMove(List<Card> hand, List<Card> communityCards, Double pot, Double current_bet, Double chips, Double already_bet, Double[] playerChips, Double[] bets, int index, int dealer_index) {
+        Random rng = new Random();
         if (rng.nextInt() > (1<<28)) {
             return Math.min(chips, current_bet); //call
         }

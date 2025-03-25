@@ -22,7 +22,7 @@ public class Scoreboard
     public String toString() {
         String retval = "";
         for (int i = 0; i < scores.length; i++) {
-            retval += "Player #" + i + " (" + playerList[i] + "): " + scores[i] + "\n";
+            retval += "Player #" + i + " (" + playerList[i] + "): " + scores[i] + " wins\n";
         }
         return retval;
     }

@@ -13,12 +13,13 @@ import java.util.List;
      * @param playerChips    An array representing the chips each player has.
      * @param bets           An array representing the current bets of each player.
      * @param index          The index of the player making the move.
+     * @param dealer_index   The index of the dealer
      * @return The amount to bet:
      *         - Return `current_bet` to call.
      *         - Return at least twice `current_bet` or all remaining `chips` to raise.
      *         - Return any other value to fold.
      */
-    public Double makeMove(List<Card> hand, List<Card> communityCards, Double pot, Double current_bet, Double chips, Double already_bet, Double[] playerChips, Double[] bets, int index) {
+    public Double makeMove(List<Card> hand, List<Card> communityCards, Double pot, Double current_bet, Double chips, Double already_bet, Double[] playerChips, Double[] bets, int index, int dealer_index) {
         return Math.min(current_bet, chips);
     }
 }

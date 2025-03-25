@@ -23,8 +23,8 @@ public class Hand {
         cards = new ArrayList<Card>();
     }
 
-    Double play(List<Card> communityCards, Double pot, Double bet, Double chips, Double current_bet, Double[] playerChips, Double[] bets, int index) {
-        return player.makeMove(cards, communityCards, pot, bet, chips, current_bet, playerChips, bets, index);
+    Double play(List<Card> communityCards, Double pot, Double current_bet, Double chips, Double already_bet, Double[] playerChips, Double[] bets, int index, int dealer_index) {
+        return player.makeMove(cards, communityCards, pot, current_bet, chips, already_bet, playerChips, bets, index, dealer_index);
     }
 
     void addCard(Card c) {

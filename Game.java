@@ -102,7 +102,7 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
-                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
+                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (eq(move, playerChips[player]+bets[player])) {
                         pot += move - bets[player];
                         playerChips[player] -= move - bets[player];
@@ -139,7 +139,7 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
-                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
+                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
@@ -184,7 +184,7 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
-                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
+                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
@@ -229,7 +229,7 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
-                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
+                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
