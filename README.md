@@ -21,7 +21,7 @@ current_bet is the amount you already have bet that is in the pot.
 
 playerChips is the amount of chips all players have.
 
-bets is the amount that each player has bet so far.
+already_bet is the amount that each player has bet so far.
 
 index is your index in the two above arrays.
 

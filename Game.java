@@ -55,7 +55,7 @@ public class Game {
             println("DECK IS COOKED");
         }
     }
-    public void play() {
+    public int play() {
         try {
             while (true) {
                 communityCards = new ArrayList<Card>();
@@ -79,9 +79,12 @@ public class Game {
                 }
                 if (cnt<=1) {
                     for (int i = 0; i < n; i++) {
-                        if (playerChips[i]>0.0001) scoreboard.addToScore(i, 1);
+                        if (playerChips[i]>0.0001) {
+                            scoreboard.addToScore(i, 1);
+                            return i;
+                        }
                     }
-                    return;
+                    return 0;
                 }
                 int remaining_count = n;
                 while (folded[dealer]) {dealer = (dealer+1)%n;}
@@ -93,20 +96,20 @@ public class Game {
                 playerChips[small_bind_player] -= bets[small_bind_player];
                 bets[big_bind_player] = Math.min(playerChips[big_bind_player], BIG_BIND);
                 playerChips[big_bind_player] -= bets[big_bind_player];
-                for (int player = (big_bind_player+1)%n, count = 0; count < n && (bets[player] < bet || count < n); player = (player+1)%n, count++) {
+                int stop = (big_bind_player+1)%n;
+
+                for (int player = (big_bind_player+1)%n, count = 0; ; player = (player+1)%n, count++) {
+                    if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
-                    if (eq(move, 0.)) {
-                        folded[player] = true;
-                        remaining_count--;
-                    }
-                    else if (eq(move, playerChips[player]+bets[player])) {
+                    if (eq(move, playerChips[player]+bets[player])) {
                         pot += move - bets[player];
                         playerChips[player] -= move - bets[player];
+                        bet += move - bets[player];
                         bets[player] = Math.max(bets[player], move);
-                        bet = playerChips[player] + bets[player];
                         remaining_count--;
+                        stop = player;
                     }
                     else if (move < playerChips[player] + bets[player] + eps && eq(move, bet)) {
                         pot += move - bets[player];
@@ -116,10 +119,12 @@ public class Game {
                     else if (move < playerChips[player] + bets[player] + eps && move >= bet*2-eps) {
                         pot += move - bets[player];
                         playerChips[player] -= move - bets[player];
+                        bet += move - bets[player];
                         bets[player] = move;
-                        bet = move;
+                        stop = player;
                     }
                     else {
+                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
@@ -127,101 +132,140 @@ public class Game {
                 addCommunityCard();
                 addCommunityCard();
                 addCommunityCard();
-                for (int player = (dealer+1)%n, count = 0; count < n && (bets[player] < bet || count < n); player = (player+1)%n, count++) {
+                bet = 0.;
+                stop = (dealer+1)%n;
+                double[] new_bets = new double[n];
+                for (int player = (dealer+1)%n, count = 0; ; player = (player+1)%n, count++) {
+                    if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
-                    if (eq(move, 0.)) {
+                    if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
                     }
-                    else if (eq(move, playerChips[player]+bets[player])) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = Math.max(bets[player], move);
-                        bet = playerChips[player] + bets[player];
+                    else if (eq(move, playerChips[player])) {
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        new_bets[player] = move;
+                        bets[player] += move;
                         remaining_count--;
+                        stop = player;
+                        bet = Math.max(bet, move);
                     }
                     else if (move < playerChips[player] + bets[player] + eps && eq(move, bet)) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
                     }
                     else if (move < playerChips[player] + bets[player] + eps && move >= bet*2-eps) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
-                        bet = move;
+                        double change = move - new_bets[player];
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
+                        bet = Math.max(bet, move);
+                        stop = player;
                     }
                     else {
+                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
                 }
+
                 addCommunityCard();
-                for (int player = (dealer+1)%n, count = 0; count < n && (bets[player] < bet || count < n); player = (player+1)%n, count++) {
+                bet = 0.;
+                stop = (dealer+1)%n;
+                new_bets = new double[n];
+                for (int player = (dealer+1)%n, count = 0; ; player = (player+1)%n, count++) {
+                    if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
-                    if (eq(move, 0.)) {
+                    if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
                     }
-                    else if (eq(move, playerChips[player]+bets[player])) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = Math.max(bets[player], move);
-                        bet = playerChips[player] + bets[player];
+                    else if (eq(move, playerChips[player])) {
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        new_bets[player] = move;
+                        bets[player] += move;
                         remaining_count--;
+                        stop = player;
+                        bet = Math.max(bet, move);
                     }
                     else if (move < playerChips[player] + bets[player] + eps && eq(move, bet)) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
                     }
                     else if (move < playerChips[player] + bets[player] + eps && move >= bet*2-eps) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
-                        bet = move;
+                        double change = move - new_bets[player];
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
+                        bet = Math.max(bet, move);
+                        stop = player;
                     }
                     else {
+                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
                 }
+
                 addCommunityCard();
-                for (int player = (dealer+1)%n, count = 0; count < n && (bets[player] < bet || count < n); player = (player+1)%n, count++) {
+                bet = 0.;
+                stop = (dealer+1)%n;
+                new_bets = new double[n];
+                for (int player = (dealer+1)%n, count = 0; ; player = (player+1)%n, count++) {
+                    if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player));
-                    if (eq(move, 0.)) {
+                    if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
                         remaining_count--;
                     }
-                    else if (eq(move, playerChips[player]+bets[player])) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = Math.max(bets[player], move);
-                        bet = playerChips[player] + bets[player];
+                    else if (eq(move, playerChips[player])) {
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        new_bets[player] = move;
+                        bets[player] += move;
                         remaining_count--;
+                        stop = player;
+                        bet = Math.max(bet, move);
                     }
                     else if (move < playerChips[player] + bets[player] + eps && eq(move, bet)) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
+                        double change = move - new_bets[player];
+                        pot += change;
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
                     }
                     else if (move < playerChips[player] + bets[player] + eps && move >= bet*2-eps) {
-                        pot += move - bets[player];
-                        playerChips[player] -= move - bets[player];
-                        bets[player] = move;
-                        bet = move;
+                        double change = move - new_bets[player];
+                        playerChips[player] -= change;
+                        bets[player] += move;
+                        new_bets[player] = move;
+                        bet = Math.max(bet, move);
+                        stop = player;
                     }
                     else {
+                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
                 }
+
                 //calculate winnings
                 int[] score = new int[n];
                 for (int i = 0; i < n; i++) {
@@ -258,12 +302,13 @@ public class Game {
                         add[ranks.get(k)] += gain;
                     }
                 }
-                for (int i = 0; i < n; i++) playerChips[i] += add[i];
+                for (int i = 0; i < n; i++) playerChips[ranks.get(i)] += add[ranks.get(i)] + bets[ranks.get(i)];
                 nextRound();
             }
         }
         catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
     }
 

@@ -17,7 +17,8 @@ public class PokerSimulation {
             Scoreboard s = new Scoreboard(playerNames.toArray(new String[0]));
             for (int i = 0; i < numGames; i++) {
                 Game g = new Game(s,playerClasses, i);
-                g.play();
+                int winner = g.play();
+                System.out.println("Game " + i + ": player " + winner + " (" + playerNames.get(winner) + ") wins!");
             }
             System.out.println(s);
         }
