@@ -102,7 +102,13 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
-                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
+                    Double[] copy_playerChips = new Double[n];
+                    Double[] copy_bets = new Double[n];
+                    for (int i = 0; i < n; i++) {
+                        copy_playerChips[i] = playerChips[i];
+                        copy_bets[i] = bets[i];
+                    }
+                    Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], copy_playerChips, copy_bets, player, dealer));
                     if (eq(move, playerChips[player]+bets[player])) {
                         pot += move - bets[player];
                         playerChips[player] -= move - bets[player];
@@ -139,6 +145,12 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
+                    Double[] copy_playerChips = new Double[n];
+                    Double[] copy_bets = new Double[n];
+                    for (int i = 0; i < n; i++) {
+                        copy_playerChips[i] = playerChips[i];
+                        copy_bets[i] = bets[i];
+                    }
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
@@ -170,7 +182,6 @@ public class Game {
                         stop = player;
                     }
                     else {
-                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
@@ -184,6 +195,12 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
+                    Double[] copy_playerChips = new Double[n];
+                    Double[] copy_bets = new Double[n];
+                    for (int i = 0; i < n; i++) {
+                        copy_playerChips[i] = playerChips[i];
+                        copy_bets[i] = bets[i];
+                    }
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;
@@ -215,7 +232,6 @@ public class Game {
                         stop = player;
                     }
                     else {
-                        // System.out.printf("Folded: %.2f %.2f %.2f\n", bets[player], playerChips[player], move);
                         folded[player] = true;
                         remaining_count--;
                     }
@@ -229,6 +245,12 @@ public class Game {
                     if (count >= n && stop==player) break;
                     if (remaining_count==0) break;
                     if (folded[player]) continue;
+                    Double[] copy_playerChips = new Double[n];
+                    Double[] copy_bets = new Double[n];
+                    for (int i = 0; i < n; i++) {
+                        copy_playerChips[i] = playerChips[i];
+                        copy_bets[i] = bets[i];
+                    }
                     Double move = Math.min(playerChips[player]+bets[player], playerHands[player].play(communityCards, pot, bet, playerChips[player], bets[player], playerChips, bets, player, dealer));
                     if (bet>eps && eq(move, 0.)) {
                         folded[player] = true;

@@ -25,6 +25,8 @@ already_bet is the amount that each player has bet so far.
 
 index is your index in the two above arrays.
 
+dealer_index is the index of the dealer.
+
 Finally, learn Java here! https://www.w3schools.com/java/default.asp
 
 Have fun!
