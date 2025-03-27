@@ -24,7 +24,15 @@ public class Hand {
     }
 
     Double play(List<Card> communityCards, Double pot, Double current_bet, Double chips, Double already_bet, Double[] playerChips, Double[] bets, int index, int dealer_index) {
-        return player.makeMove(cards, communityCards, pot, current_bet, chips, already_bet, playerChips, bets, index, dealer_index);
+        ArrayList<Card> communityCardsCopy = new ArrayList<Card>();
+        for (Card c : communityCards) {
+            communityCardsCopy.add(c);
+        }
+        ArrayList<Card> cardsCopy = new ArrayList<Card>();
+        for (Card c : cards) {
+            cardsCopy.add(c);
+        }
+        return player.makeMove(cardsCopy, communityCardsCopy, pot, current_bet, chips, already_bet, playerChips, bets, index, dealer_index);
     }
 
     void addCard(Card c) {
