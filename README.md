@@ -29,4 +29,8 @@ dealer_index is the index of the dealer.
 
 Finally, learn Java here! https://www.w3schools.com/java/default.asp
 
+# Code Submissions
+
+When you are done coding your bot, submit your program **[here](https://docs.google.com/forms/d/e/1FAIpQLSeSl6_iEJTGXu3T41AW8iNbE_sYoXJYYY43_uzvx9CG8xtUKA/viewform?usp=dialog).** Your code will be run in a tournament with 4-6 people who submit at around the same time.
+
 Have fun!
