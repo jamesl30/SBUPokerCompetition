@@ -13,15 +13,15 @@ List<Card> communityCards is a list of the communityCards
 
 pot is the amount in the pot.
 
-bet is the amount you need to bet to call.
+current_bet is the amount that someone bet that you need to match/call/raise.
 
 chips is the amount of chips you have.
 
-current_bet is the amount you already have bet that is in the pot.
+already_bet is the amount that you have already bet (for example, binds or how much you raised but someone reraised you).
 
-playerChips is the amount of chips all players have.
+playerChips is an array of the amount of chips all players have.
 
-already_bet is the amount that each player has bet so far.
+bets is an array of all bets that have been made.
 
 index is your index in the two above arrays.
 
